@@ -1,0 +1,3 @@
+airflow tasks test ml_delete_collection delete_collection_task
+
+airflow tasks test ml_sitemap_pipeline parse_and_save_sitemap_embedings
