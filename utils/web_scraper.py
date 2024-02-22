@@ -158,7 +158,7 @@ class ImageEmbedder(ChromDBClient):
         rel_img_dump_path = '/home/allquill/airflow/dags/machine_learning/dags/docs' #img_dump_path.relative_to(Path.cwd())
         print("pdf index")  # noqa: T201
         
-        pil_images = self.get_images_from_pdf(rel_doc_path, rel_img_dump_path)
+        pil_images = self.get_images_from_pdf(doc_path, rel_img_dump_path)
         print("done")  # noqa: T201
         
         # vectorstore = Path(__file__).parent / "chroma_db_multi_modal"
