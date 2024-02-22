@@ -67,7 +67,7 @@ with DAG(
         print(f"Indexing PDF from {docs_folder}")
         
         if(docs_folder):
-            image_embedder = ImageEmbedder(chromadb_host=chromadb_host,collection_name=collection_name)
+            image_embedder = ImageEmbedder(doc_path=docs_folder)
             image_embedder.embedded()
     
     # Task: Scrape URLs and write to a file
