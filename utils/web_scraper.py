@@ -154,8 +154,8 @@ class ImageEmbedder(ChromDBClient):
         print(f"doc_path: {doc_path}")
         print(f"Path.cwd(): {Path.cwd()}")
         print(f"Relative: {doc_path.relative_to(Path.cwd())}")        
-        rel_doc_path = doc_path.relative_to(Path.cwd())
-        rel_img_dump_path = img_dump_path.relative_to(Path.cwd())
+        rel_doc_path = '/home/allquill/airflow/dags/machine_learning/dags/docs' #doc_path.relative_to(Path.cwd())
+        rel_img_dump_path = '/home/allquill/airflow/dags/machine_learning/dags/docs' #img_dump_path.relative_to(Path.cwd())
         print("pdf index")  # noqa: T201
         
         pil_images = self.get_images_from_pdf(rel_doc_path, rel_img_dump_path)
