@@ -126,8 +126,9 @@ class WebScraperEmbedder(ChromDBClient):
         logging.info(f"** COMPLETED LOADING SITEMAP FROM: {self.sitemap_url}")
 
 class ImageEmbedder(ChromDBClient):
-    def __init__(self):
+    def __init__(self, doc_path = Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf"):
         super.__init__()
+        self.doc_path = doc_path 
             
     def get_images_from_pdf(self, pdf_path, img_dump_path):
         """
@@ -146,7 +147,7 @@ class ImageEmbedder(ChromDBClient):
     
     def embedded(self):
         # Load PDF
-        doc_path = Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf"
+        doc_path = self.doc_path #Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf"
         img_dump_path = Path(__file__).parent / "docs/"
         rel_doc_path = doc_path.relative_to(Path.cwd())
         rel_img_dump_path = img_dump_path.relative_to(Path.cwd())
