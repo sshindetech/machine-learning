@@ -126,8 +126,9 @@ class WebScraperEmbedder(ChromDBClient):
         logging.info(f"** COMPLETED LOADING SITEMAP FROM: {self.sitemap_url}")
 
 class ImageEmbedder(ChromDBClient):
-    def __init__(self, doc_path = Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf"):
-        super.__init__()
+    def __init__(self, doc_path = Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf",
+                 chromadb_host = '10.0.1.104', collection_name = 'multi-modal-rag'):
+        super().__init__(chromadb_host, collection_name)
         self.doc_path = doc_path 
             
     def get_images_from_pdf(self, pdf_path, img_dump_path):
