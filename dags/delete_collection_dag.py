@@ -54,13 +54,12 @@ with DAG(
         bash_command="date",
         dag=dag,
     )
-
-    chroma_client = ChromDBClient()
     
     def delete_collection(**context):
         chromadb_host = context["params"]["chromadb_host_url"]
         collection_name = context["params"]["chromadb_collection_name"]  
-        logging.info(f"Sending request for deleting collection: {collection_name}")      
+        logging.info(f"Sending request for deleting collection: {collection_name}")   
+        chroma_client = ChromDBClient(chromadb_host=chromadb_host, collection_name=collection_name)   
         return chroma_client.delete_collection()
         
     # Task: Scrape URLs and write to a file
