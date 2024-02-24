@@ -47,7 +47,7 @@ with DAG(
     catchup=False,
     tags=["machine_learning"],
     params={
-         "docs_folder": Param(Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf", type=["null", "string"]),
+         "docs_folder": Param(Path(__file__).parent / "docs/sample_deck.pdf", type=["null", "string"]),
          "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
          "chromadb_collection_name": Param('multi-modal-rag', type=["null", "string"])
      }    

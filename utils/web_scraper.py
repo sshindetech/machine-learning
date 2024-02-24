@@ -66,6 +66,8 @@ class ChromDBClient:
                 }
             )
         
+        print("Finished embedding save_and_return_image_vectorstore")  # noqa: T201
+        
         return vectorStore
             
         # embedding = OpenCLIPEmbeddings(model_name="ViT-H-14", checkpoint="laion2b_s32b_b79k")
@@ -195,7 +197,7 @@ class ImageEmbedder(ChromDBClient):
         # Add images
         print("Embedding images")  # noqa: T201
         vectorstore_mmembd = self.save_and_return_image_vectorstore(image_uris)
-        vectorstore_mmembd.add_images(uris=image_uris)        
+        # vectorstore_mmembd.add_images(uris=image_uris)
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
         
