@@ -57,7 +57,7 @@ class ChromDBClient:
         print("Loading embedding function")  # noqa: T201
         vectorStore = Chroma.from_documents(
             documents, 
-            HuggingFaceEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
+            OpenCLIPEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
             client=self.chroma_client, 
             collection_name= self.image_collection_name,
             collection_metadata = {
