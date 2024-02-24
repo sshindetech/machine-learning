@@ -54,7 +54,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         
         image = Image.open(photo_image_url)
         print('image')
-        print(image_inputs)
+        print(image)
         
         image_inputs = processor(image)
         print('image_inputs')

@@ -62,8 +62,8 @@ class ChromDBClient:
         print("Loading Image embedding function")  # noqa: T201
         docs = [
             Document(
-                page_content= photo_image_url, 
-                metadata= {
+                page_content=photo_image_url, 
+                metadata={
                     "photo_image_url": photo_image_url 
                 }                
             )
