@@ -24,6 +24,7 @@ class ChromDBClient:
     def __init__(self):
         self.chromadb_host = '10.0.1.104', 
         self.collection_name = 'a-test-collection'
+        self.image_collection_name = 'multi-modal-rag'
         print(f"ChromDBClient initialized: {self.chromadb_host}")
             
     def __init__(self, chromadb_host = '10.0.1.104', collection_name = 'a-test-collection'):
@@ -46,41 +47,27 @@ class ChromDBClient:
                 "hnsw:space": "cosine",
             }
         )
+        
+        print("Finished TEXT Embeddings: save_and_return_vector_store")  # noqa: T201
+        
         return vectorStore
     
-    def save_and_return_image_vectorstore(self, image_uris = []):        
+    def save_and_return_image_vector_store(self, documents):        
         # Load embedding function
         print("Loading embedding function")  # noqa: T201
+        vectorStore = Chroma.from_documents(
+            documents, 
+            HuggingFaceEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
+            client=self.chroma_client, 
+            collection_name= self.image_collection_name,
+            collection_metadata = {
+                "hnsw:space": "cosine",
+            }
+        )
         
-        for image_path in image_uris:
-            loader = UnstructuredImageLoader(image_path)
-            documents = loader.load()
-        
-            vectorStore = Chroma.from_documents(
-                documents, 
-                HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"), 
-                client=self.chroma_client, 
-                collection_name=self.collection_name,
-                collection_metadata = {
-                    "hnsw:space": "cosine",
-                }
-            )
-        
-        print("Finished embedding save_and_return_image_vectorstore")  # noqa: T201
+        print("Finished IMAGE Embeddings: save_and_return_image_vector_store")  # noqa: T201
         
         return vectorStore
-            
-        # embedding = OpenCLIPEmbeddings(model_name="ViT-H-14", checkpoint="laion2b_s32b_b79k")
-
-        # # Create chroma
-        # vectorstore_mmembd = Chroma(
-        #     client=self.chroma_client, 
-        #     collection_name="multi-modal-rag",
-        #     embedding_function=embedding,
-        # )
-                
-        # return vectorstore_mmembd    
-
 
 class WebScraperEmbedder(ChromDBClient):
     
@@ -196,7 +183,11 @@ class ImageEmbedder(ChromDBClient):
 
         # Add images
         print("Embedding images")  # noqa: T201
-        vectorstore_mmembd = self.save_and_return_image_vectorstore(image_uris)
+        for image_path in image_uris:
+            loader = UnstructuredImageLoader(image_path)
+            documents = loader.load()
+            self.save_and_return_vector_store(documents) # Save embedding in TEXT collection for text search
+            self.save_and_return_image_vector_store(documents) # Save embedding in IMAGE collection for text search
         # vectorstore_mmembd.add_images(uris=image_uris)
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
