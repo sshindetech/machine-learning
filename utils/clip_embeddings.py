@@ -50,6 +50,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         vision_model = CLIPVisionModel.from_pretrained(self.model_name)
         
         photo_image_url = texts[0]
+        print('Embedding URL: ' + photo_image_url)
         image = Image.open(photo_image_url)
         
         image_inputs = processor(image)
