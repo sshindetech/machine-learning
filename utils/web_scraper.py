@@ -17,6 +17,8 @@ import pypdfium2 as pdfium
 from langchain_community.vectorstores import Chroma
 from langchain_experimental.open_clip import OpenCLIPEmbeddings
 
+from langchain_community.document_loaders.image import UnstructuredImageLoader
+
 class ChromDBClient:
     
     def __init__(self):
@@ -46,19 +48,36 @@ class ChromDBClient:
         )
         return vectorStore
     
-    def save_and_return_image_vectorstore(self):        
+    def save_and_return_image_vectorstore(self, image_uris = []):        
         # Load embedding function
         print("Loading embedding function")  # noqa: T201
-        embedding = OpenCLIPEmbeddings(model_name="ViT-H-14", checkpoint="laion2b_s32b_b79k")
+        
+        for image_path in image_uris:
+            loader = UnstructuredImageLoader(image_path)
+            documents = loader.load()
+        
+            vectorStore = Chroma.from_documents(
+                documents, 
+                HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"), 
+                client=self.chroma_client, 
+                collection_name=self.collection_name,
+                collection_metadata = {
+                    "hnsw:space": "cosine",
+                }
+            )
+        
+        return vectorStore
+            
+        # embedding = OpenCLIPEmbeddings(model_name="ViT-H-14", checkpoint="laion2b_s32b_b79k")
 
-        # Create chroma
-        vectorstore_mmembd = Chroma(
-            client=self.chroma_client, 
-            collection_name="multi-modal-rag",
-            embedding_function=embedding,
-        )
+        # # Create chroma
+        # vectorstore_mmembd = Chroma(
+        #     client=self.chroma_client, 
+        #     collection_name="multi-modal-rag",
+        #     embedding_function=embedding,
+        # )
                 
-        return vectorstore_mmembd    
+        # return vectorstore_mmembd    
 
 
 class WebScraperEmbedder(ChromDBClient):
@@ -126,7 +145,7 @@ class WebScraperEmbedder(ChromDBClient):
         logging.info(f"** COMPLETED LOADING SITEMAP FROM: {self.sitemap_url}")
 
 class ImageEmbedder(ChromDBClient):
-    def __init__(self, doc_path = Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf",
+    def __init__(self, doc_path = Path(__file__).parent / "docs/sample_deck.pdf",
                  chromadb_host = '10.0.1.104', collection_name = 'multi-modal-rag'):
         super().__init__(chromadb_host, collection_name)
         self.doc_path = doc_path 
@@ -164,7 +183,6 @@ class ImageEmbedder(ChromDBClient):
         # vectorstore = Path(__file__).parent / "chroma_db_multi_modal"
         # re_vectorstore_path = vectorstore.relative_to(Path.cwd())
 
-        vectorstore_mmembd = self.save_and_return_image_vectorstore()
         # Get image URIs
         image_uris = sorted(
             [
@@ -176,6 +194,7 @@ class ImageEmbedder(ChromDBClient):
 
         # Add images
         print("Embedding images")  # noqa: T201
+        vectorstore_mmembd = self.save_and_return_image_vectorstore(image_uris)
         vectorstore_mmembd.add_images(uris=image_uris)        
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
