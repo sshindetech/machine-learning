@@ -19,6 +19,8 @@ from langchain_experimental.open_clip import OpenCLIPEmbeddings
 
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 
+from clip_embeddings import CLIPEmbeddings
+
 class ChromDBClient:
     
     def __init__(self):
@@ -57,7 +59,7 @@ class ChromDBClient:
         print("Loading embedding function")  # noqa: T201
         vectorStore = Chroma.from_documents(
             documents, 
-            OpenCLIPEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
+            CLIPEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
             client=self.chroma_client, 
             collection_name= self.image_collection_name,
             collection_metadata = {
