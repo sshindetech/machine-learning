@@ -29,9 +29,10 @@ class ChromDBClient:
         self.image_collection_name = 'multi-modal-rag'
         print(f"ChromDBClient initialized: {self.chromadb_host}")
             
-    def __init__(self, chromadb_host = '10.0.1.104', collection_name = 'a-test-collection'):
+    def __init__(self, chromadb_host = '10.0.1.104', collection_name = 'a-test-collection', image_collection_name = 'multi-modal-rag'):
         self.chromadb_host = chromadb_host
         self.collection_name = collection_name
+        self.image_collection_name = 'multi-modal-rag'
         self.chroma_client = chromadb.HttpClient(host=chromadb_host, port=8000)
         print(f"ChromDBClient initialized: {self.chromadb_host}")
         
@@ -61,7 +62,7 @@ class ChromDBClient:
             documents, 
             CLIPEmbeddings(model_name="Xenova/clip-vit-base-patch32"), 
             client=self.chroma_client, 
-            collection_name= self.image_collection_name,
+            collection_name=self.image_collection_name,
             collection_metadata = {
                 "hnsw:space": "cosine",
             }
