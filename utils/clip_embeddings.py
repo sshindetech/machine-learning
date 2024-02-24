@@ -54,7 +54,13 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         image = Image.open(photo_image_url)
         
         image_inputs = processor(image)
+        print('Image')
+        print(image_inputs)
+        
         embeddings = vision_model(image_inputs)
+        
+        print('embeddings')
+        print(embeddings)
         
         return embeddings.tolist()[0]
 
