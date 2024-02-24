@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 
 import chromadb
 
+from langchain_core.documents import Document
+
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain.document_loaders.web_base import (WebBaseLoader,)
@@ -55,11 +57,20 @@ class ChromDBClient:
         
         return vectorStore
     
-    def save_and_return_image_vector_store(self, documents):        
+    def save_and_return_image_vector_store(self, photo_image_url):        
         # Load embedding function
         print("Loading embedding function")  # noqa: T201
+        docs = [
+            Document(
+                page_content= photo_image_url, 
+                metadata= {
+                    "photo_image_url": photo_image_url 
+                }                
+            )
+        ]
+        
         vectorStore = Chroma.from_documents(
-            documents, 
+            docs, 
             CLIPEmbeddings(model_name="openai/clip-vit-base-patch32"), 
             client=self.chroma_client, 
             collection_name=self.image_collection_name,
@@ -190,7 +201,7 @@ class ImageEmbedder(ChromDBClient):
             loader = UnstructuredImageLoader(image_path)
             documents = loader.load()
             self.save_and_return_vector_store(documents) # Save embedding in TEXT collection for text search
-            self.save_and_return_image_vector_store(documents) # Save embedding in IMAGE collection for text search
+            self.save_and_return_image_vector_store(image_path) # Save embedding in IMAGE collection for text search
         # vectorstore_mmembd.add_images(uris=image_uris)
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
