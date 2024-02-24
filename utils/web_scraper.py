@@ -19,7 +19,7 @@ from langchain_experimental.open_clip import OpenCLIPEmbeddings
 
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 
-from clip_embeddings import CLIPEmbeddings
+from machine_learning.utils.clip_embeddings import CLIPEmbeddings
 
 class ChromDBClient:
     
