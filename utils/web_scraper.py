@@ -59,7 +59,7 @@ class ChromDBClient:
     
     def save_and_return_image_vector_store(self, photo_image_url):        
         # Load embedding function
-        print("Loading embedding function")  # noqa: T201
+        print("Loading Image embedding function")  # noqa: T201
         docs = [
             Document(
                 page_content= photo_image_url, 
@@ -200,8 +200,10 @@ class ImageEmbedder(ChromDBClient):
         for image_path in image_uris:
             loader = UnstructuredImageLoader(image_path)
             documents = loader.load()
-            self.save_and_return_vector_store(documents) # Save embedding in TEXT collection for text search
-            self.save_and_return_image_vector_store(image_path) # Save embedding in IMAGE collection for text search
+            # Save embedding in TEXT collection for text search
+            self.save_and_return_vector_store(documents) 
+            # Save embedding in IMAGE collection for text search
+            self.save_and_return_image_vector_store(image_path) 
         # vectorstore_mmembd.add_images(uris=image_uris)
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
