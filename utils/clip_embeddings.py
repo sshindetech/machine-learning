@@ -66,7 +66,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print(embeddings)
         
         print('embeddings')
-        print(embeddings.image_embeds[0])
+        print(embeddings)
                 
         return embeddings.image_embeds[0]
 
