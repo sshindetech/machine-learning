@@ -50,7 +50,7 @@ with DAG(
          "docs_folder": Param(Path(__file__).parent / "docs/sample_deck.pdf", type=["null", "string"]),
          "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
          "collection_name": Param('a-test-collection', type=["null", "string"]),
-         "chromadb_collection_name": Param('multi-modal-rag', type=["null", "string"])
+         "image_collection_name": Param('multi-modal-rag', type=["null", "string"])
      }    
 ) as dag:
 
