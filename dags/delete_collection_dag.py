@@ -10,12 +10,14 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from machine_learning.utils.web_scraper import ChromDBClient
+from dags.machine_learning.utils.chroma_client import ChromDBClient
 
 import logging
 
+import machine_learning.utils.constants as CONST;
+
 with DAG(
-    "ml_delete_collection",
+    "ml_delete_collection_dag",
     # These args will get passed on to each operator
     # You can override them on a per-task basis during operator initialization
     default_args={
@@ -42,8 +44,8 @@ with DAG(
     schedule=None,
     catchup=False,
     params={
-         "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
-         "chromadb_collection_name": Param('a-test-collection', type=["null", "string"])
+         "chromadb_host_url": Param(CONST.CHROM_DB_HOST, type=["null", "string"]),
+         "chromadb_collection_name": Param(CONST.CHROM_TEXT_COLLECTION, type=["null", "string"])
      }, 
     tags=["machine_learning"],
 ) as dag:
@@ -59,6 +61,7 @@ with DAG(
         chromadb_host = context["params"]["chromadb_host_url"]
         collection_name = context["params"]["chromadb_collection_name"]  
         logging.info(f"Sending request for deleting collection: {collection_name}")   
+        
         chroma_client = ChromDBClient(chromadb_host=chromadb_host, collection_name=collection_name)   
         return chroma_client.delete_collection()
         

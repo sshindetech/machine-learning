@@ -10,10 +10,10 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from machine_learning.utils.web_scraper import WebScraperEmbedder
+from dags.machine_learning.utils.sitemap_embedder import SitemapEmbedder
 
 with DAG(
-    "ml_sitemap_pipeline",
+    "ml_web_scraper_dag",
     # These args will get passed on to each operator
     # You can override them on a per-task basis during operator initialization
     default_args={
@@ -59,7 +59,7 @@ with DAG(
         sitemap_url = context["params"]["sitemap_url"]
         max_url_to_process = context["params"]["max_url_to_process"]
         print(f"Sitemap URL from DAG {sitemap_url}")
-        scrapper = WebScraperEmbedder(sitemap_url=sitemap_url, max_url_to_process=max_url_to_process)
+        scrapper = SitemapEmbedder(sitemap_url=sitemap_url, max_url_to_process=max_url_to_process)
         return scrapper.parse_and_save_sitemap_embedings()
     
     # Task: Scrape URLs and write to a file

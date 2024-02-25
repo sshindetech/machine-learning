@@ -10,10 +10,10 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from machine_learning.utils.web_scraper import WebScraperEmbedder
+from dags.machine_learning.utils.sitemap_embedder import SitemapEmbedder
 
 with DAG(
-    "ml_url_parser_pipeline",
+    "ml_url_embedder_dag",
     # These args will get passed on to each operator
     # You can override them on a per-task basis during operator initialization
     default_args={
@@ -61,12 +61,12 @@ with DAG(
         print(f"Indexing URLs {url_list}")
         
         if(url_list):
-            scrapper = WebScraperEmbedder(chromadb_host=chromadb_host,collection_name=collection_name)
+            scrapper = SitemapEmbedder(chromadb_host=chromadb_host,collection_name=collection_name)
             urls = url_list.split(",")
             for url in urls:
                 print(f"Creating Embeddings for URLs {url}")
                 documents = scrapper.parse_html_using_webloader(url=url)
-                scrapper.save_and_return_vector_store(documents)  
+                scrapper.save_documents_and_return_vectorstore(documents)  
                                                 
     
     # Task: Scrape URLs and write to a file

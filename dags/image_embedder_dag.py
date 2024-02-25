@@ -10,13 +10,10 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from machine_learning.utils.web_scraper import ImageEmbedder
+from dags.machine_learning.utils.sitemap_embedder import ImageEmbedder
 
 import os
 from pathlib import Path
-
-print("*******************")
-print(Path(__file__).parent)
 
 with DAG(
     "ml_image_embedder_dag",

@@ -1,16 +1,20 @@
-DEFAULT_MODEL_NAME = "Xenova/clip-vit-base-patch32"
+
 
 from typing import Any, Dict, List, Optional
 
 from langchain_core.embeddings import Embeddings
-from langchain_core.pydantic_v1 import BaseModel, Extra, Field, SecretStr
+from langchain_core.pydantic_v1 import BaseModel, Extra, Field
 
 from transformers import CLIPVisionModelWithProjection, AutoTokenizer, AutoProcessor, CLIPTextModelWithProjection
 from PIL import Image
 
+import machine_learning.utils.constants as CONST;
+
+DEFAULT_MODEL_NAME = CONST.IMAGE_MODEL_NAME
+
 class CLIPEmbeddings(BaseModel, Embeddings):
-    """HuggingFace sentence_transformers embedding models.
-    To use, you should have the ``sentence_transformers`` python package installed.
+    """
+    HuggingFace sentence_transformers embedding models.
     """
 
     client: Any  #: :meta private:
@@ -34,15 +38,12 @@ class CLIPEmbeddings(BaseModel, Embeddings):
 
     class Config:
         """Configuration for this pydantic object."""
-
         extra = Extra.forbid
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """Compute doc embeddings using a HuggingFace transformer model.
-
         Args:
             texts: The list of texts to embed.
-
         Returns:
             List of embeddings, one for each text.
         """
@@ -60,10 +61,8 @@ class CLIPEmbeddings(BaseModel, Embeddings):
 
     def embed_query(self, text: str) -> List[float]:
         """Compute query embeddings using a HuggingFace transformer model.
-
         Args:
             text: The text to embed.
-
         Returns:
             Embeddings for the text.
         """
