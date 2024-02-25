@@ -56,7 +56,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('image')
         print(image)
         
-        image_inputs = processor(images=image, quantized=False)      
+        image_inputs = processor(images=image, return_tensors="pt")      
         print('image_inputs')
         print(image_inputs)
         
@@ -65,10 +65,10 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('embeddings')
         print(embeddings)
         
-        print('embeddings')
-        print(embeddings)
+        print('embeddings[0]')
+        print(embeddings.image_embeds)
                 
-        return embeddings.image_embeds[0]
+        return embeddings
 
     def embed_query(self, text: str) -> List[float]:
         """Compute query embeddings using a HuggingFace transformer model.
