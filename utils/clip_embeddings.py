@@ -56,7 +56,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('image')
         print(image)
         
-        image_inputs = processor(images=image)      
+        image_inputs = processor(images=image, quantized=False)      
         print('image_inputs')
         print(image_inputs)
         
