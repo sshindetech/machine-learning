@@ -34,7 +34,7 @@ class ChromDBClient:
     def __init__(self, chromadb_host = '10.0.1.104', collection_name = 'a-test-collection', image_collection_name = 'multi-modal-rag'):
         self.chromadb_host = chromadb_host
         self.collection_name = collection_name
-        self.image_collection_name = 'multi-modal-rag'
+        self.image_collection_name = image_collection_name
         self.chroma_client = chromadb.HttpClient(host=chromadb_host, port=8000)
         print(f"ChromDBClient initialized: {self.chromadb_host}")
         
@@ -149,8 +149,8 @@ class WebScraperEmbedder(ChromDBClient):
 
 class ImageEmbedder(ChromDBClient):
     def __init__(self, doc_path = Path(__file__).parent / "docs/sample_deck.pdf",
-                 chromadb_host = '10.0.1.104', collection_name = 'multi-modal-rag'):
-        super().__init__(chromadb_host, collection_name)
+                 chromadb_host = '10.0.1.104', collection_name = 'a-test-collection', image_collection_name = 'multi-modal-rag'):
+        super().__init__(chromadb_host, collection_name, image_collection_name)
         self.doc_path = doc_path 
             
     def get_images_from_pdf(self, pdf_path, img_dump_path):

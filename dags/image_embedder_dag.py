@@ -68,7 +68,7 @@ with DAG(
         
         if(docs_folder):
             image_embedder = ImageEmbedder(doc_path=docs_folder,
-                                           chromadb_host=chromadb_host,collection_name=collection_name)
+                                           chromadb_host=chromadb_host,collection_name=collection_name, image_collection_name='multi-modal-rag')
             image_embedder.embedded()
     
     # Task: Scrape URLs and write to a file
