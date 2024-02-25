@@ -65,6 +65,9 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('embeddings')
         print(embeddings)
         
+        print('embeddings')
+        print(embeddings.image_embeds)
+                
         return embeddings.image_embeds
 
     def embed_query(self, text: str) -> List[float]:
