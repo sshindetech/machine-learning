@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from langchain_core.embeddings import Embeddings
 from langchain_core.pydantic_v1 import BaseModel, Extra, Field, SecretStr
 
-from transformers import CLIPVisionModel, AutoTokenizer, AutoProcessor, CLIPTextModelWithProjection
+from transformers import CLIPVisionModelWithProjection, AutoTokenizer, AutoProcessor, CLIPTextModelWithProjection
 from PIL import Image
 
 class CLIPEmbeddings(BaseModel, Embeddings):
@@ -47,7 +47,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
             List of embeddings, one for each text.
         """
         processor =  AutoProcessor.from_pretrained(self.model_name)
-        vision_model = CLIPVisionModel.from_pretrained(self.model_name)
+        vision_model = CLIPVisionModelWithProjection.from_pretrained(self.model_name)
         
         photo_image_url = texts[0]
         print('Embedding URL: ' + photo_image_url)
