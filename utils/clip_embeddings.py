@@ -60,7 +60,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('image_inputs')
         print(image_inputs)
         
-        embeddings = vision_model(image_inputs)
+        embeddings = vision_model(**image_inputs)
         
         print('embeddings')
         print(embeddings)
