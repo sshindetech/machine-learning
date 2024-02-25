@@ -52,25 +52,10 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         photo_image_url = texts[0]
         print('Embedding URL: ' + photo_image_url)
         
-        image = Image.open(photo_image_url)
-        print('image')
-        print(image)
-        
-        image_inputs = processor(images=image, return_tensors="pt")      
-        print('image_inputs')
-        print(image_inputs)
-        
+        image = Image.open(photo_image_url)        
+        image_inputs = processor(images=image, return_tensors="pt")              
         embeddings = vision_model(**image_inputs)
-        
-        print('embeddings')
-        print(embeddings)
-        
-        print('embeddings.image_embeds')
-        print(embeddings.image_embeds)
-               
-        print('embeddings.image_embeds[0]')
-        print(embeddings.image_embeds[0])  
-                      
+                              
         return embeddings.image_embeds.tolist()
 
     def embed_query(self, text: str) -> List[float]:

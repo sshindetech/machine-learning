@@ -49,6 +49,7 @@ with DAG(
     params={
          "docs_folder": Param(Path(__file__).parent / "docs/sample_deck.pdf", type=["null", "string"]),
          "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
+         "collection_name": Param('a-test-collection', type=["null", "string"]),
          "chromadb_collection_name": Param('multi-modal-rag', type=["null", "string"])
      }    
 ) as dag:
@@ -63,12 +64,13 @@ with DAG(
     def create_emebeddings(**context):
         docs_folder = context["params"]["docs_folder"]
         chromadb_host = context["params"]["chromadb_host_url"]
-        collection_name = context["params"]["chromadb_collection_name"]  
+        collection_name = context["params"]["collection_name"] 
+        image_collection_name = context["params"]["image_collection_name"]  
         print(f"Indexing PDF from {docs_folder}")
         
         if(docs_folder):
             image_embedder = ImageEmbedder(doc_path=docs_folder,
-                                           chromadb_host=chromadb_host,collection_name=collection_name, image_collection_name='multi-modal-rag')
+                                           chromadb_host=chromadb_host,collection_name=collection_name, image_collection_name=image_collection_name)
             image_embedder.embedded()
     
     # Task: Scrape URLs and write to a file
