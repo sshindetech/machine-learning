@@ -65,7 +65,7 @@ class CLIPEmbeddings(BaseModel, Embeddings):
         print('embeddings')
         print(embeddings)
         
-        return embeddings.tolist()[0]
+        return embeddings.tolist()
 
     def embed_query(self, text: str) -> List[float]:
         """Compute query embeddings using a HuggingFace transformer model.
