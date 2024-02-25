@@ -198,12 +198,14 @@ class ImageEmbedder(ChromDBClient):
         # Add images
         print("Embedding images")  # noqa: T201
         for image_path in image_uris:
-            loader = UnstructuredImageLoader(image_path)
-            documents = loader.load()
-            # Save embedding in TEXT collection for text search
-            self.save_and_return_vector_store(documents) 
             # Save embedding in IMAGE collection for text search
             self.save_and_return_image_vector_store(image_path) 
+            
+            # Save embedding in TEXT collection for text search
+            loader = UnstructuredImageLoader(image_path)
+            documents = loader.load()
+            self.save_and_return_vector_store(documents) 
+           
         # vectorstore_mmembd.add_images(uris=image_uris)
 
 # WebScraperEmbedder().parse_and_save_sitemap_embedings()
