@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from pathlib import Path
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow.models.dag import DAG
@@ -42,7 +41,7 @@ with DAG(
     catchup=False,
     tags=["machine_learning"],
     params={
-         "docs_folder": Param(Path(__file__).parent / "docs/sample_deck.pdf", type=["null", "string"]),
+         "docs_folder": Param(CONST.DOCUMENT_SOURCE, type=["null", "string"]),
          "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
          "collection_name": Param('a-test-collection', type=["null", "string"]),
          "image_collection_name": Param('multi-modal-rag', type=["null", "string"])

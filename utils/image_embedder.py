@@ -15,6 +15,7 @@ from langchain_experimental.open_clip import OpenCLIPEmbeddings
 
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 
+from pathlib import Path
 
 from machine_learning.utils.chroma_client import DocumentEmbeddingsClient
 
@@ -47,10 +48,10 @@ class ImageEmbedder(DocumentEmbeddingsClient):
     
     def embedded(self):
         # Load PDF
-        doc_path = self.doc_path #Path(__file__).parent / "docs/DDOG_Q3_earnings_deck.pdf"                
-        rel_img_dump_path = '/home/allquill/airflow/dags/machine_learning/dags/docs' #img_dump_path.relative_to(Path.cwd())
+        pdf_doc_path = os.path.join(self.doc_path, 'sample_deck.pdf')               
+        rel_img_dump_path = os.path.join(self.doc_path, 'images')
         
-        pil_images = self.__get_images_from_pdf(doc_path, rel_img_dump_path)
+        pil_images = self.__get_images_from_pdf(pdf_doc_path, rel_img_dump_path)
 
         # Get image URIs
         image_uris = sorted(
@@ -62,7 +63,7 @@ class ImageEmbedder(DocumentEmbeddingsClient):
         )
 
         # Embedded and add images to Vector Store
-        logging.info("Embedding images from location: " + doc_path)
+        logging.info("Embedding images from location: " + rel_img_dump_path)
         
         textEmbeddingClient = DocumentEmbeddingsClient(
             chromadb_host=self.chromadb_host, 
@@ -74,7 +75,7 @@ class ImageEmbedder(DocumentEmbeddingsClient):
             documents = [ 
                 Document(page_content=image_path, metadata={ "photo_image_url": image_path})
             ]
-            self.save_documents_and_return_vectorstore(documents) 
+            self.save_documents_and_return_vectorstore(documents)
             
             # Save embedding in TEXT collection for text search
             loader = UnstructuredImageLoader(image_path)
