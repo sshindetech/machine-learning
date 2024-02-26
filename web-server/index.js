@@ -1,7 +1,10 @@
 var express = require('express')
 
-var app = express()
-
 var STATIC_FOLDER = "/home/allquill/docs/images";
 
-app.use(express.static(STATIC_FOLDER))
+var app = express()
+app.use(express.static(STATIC_FOLDER));
+
+const port = process.env.PORT || 3002;
+console.log('App listening on port ' + port + '!');
+app.listen(port);
