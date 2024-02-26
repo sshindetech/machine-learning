@@ -42,9 +42,8 @@ with DAG(
     tags=["machine_learning"],
     params={
          "docs_folder": Param(CONST.DOCUMENT_SOURCE, type=["null", "string"]),
-         "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
-         "collection_name": Param('a-test-collection', type=["null", "string"]),
-         "image_collection_name": Param('multi-modal-rag', type=["null", "string"])
+         "chromadb_host_url": Param(CONST.CHROM_DB_HOST, type=["null", "string"]),
+         "collection_name": Param(CONST.CHROME_IMAGE_COLLECTION, type=["null", "string"])
      }    
 ) as dag:
 
@@ -59,7 +58,6 @@ with DAG(
         docs_folder = context["params"]["docs_folder"]
         chromadb_host = context["params"]["chromadb_host_url"]
         collection_name = context["params"]["collection_name"] 
-        image_collection_name = context["params"]["image_collection_name"]  
         print(f"Indexing PDF from {docs_folder}")
         
         if(docs_folder):

@@ -44,9 +44,9 @@ with DAG(
     catchup=False,
     tags=["machine_learning"],
     params={
-         "url_list": Param("https://js.langchain.com/docs/get_started/introduction,https://js.langchain.com/docs/get_started/installation", type=["null", "string"]),
-         "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
-         "chromadb_collection_name": Param('a-test-collection', type=["null", "string"])
+         "url_list": Param(CONST.DEFAULT_URL_TO_INDEX, type=["null", "string"]),
+         "chromadb_host_url": Param(CONST.CHROM_DB_HOST, type=["null", "string"]),
+         "chromadb_collection_name": Param(CONST.CHROM_TEXT_COLLECTION, type=["null", "string"])
      }    
 ) as dag:
 

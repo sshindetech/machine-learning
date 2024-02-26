@@ -4,6 +4,7 @@ CHROM_TEXT_COLLECTION = 'a-test-collection'
 CHROME_IMAGE_COLLECTION = 'multi-modal-rag'
 
 SITEMAP_DEFAULT  = 'https://www.netcentric.biz/sitemap.xml'
+DEFAULT_URL_TO_INDEX='https://business.adobe.com/blog/basics/adobe-experience-manager'
 SITEMAP_MAX_URL_TO_PROCESS = 10
 
 TEXT_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
