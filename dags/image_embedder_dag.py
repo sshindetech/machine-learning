@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+import logging
+import json
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow.models.dag import DAG
@@ -54,8 +56,7 @@ with DAG(
         
         converter = PDFToImageConverter(doc_path=docs_folder)
         image_list = converter.convert()
-        
-        context['ti'].xcom_push(key='image_list', value=image_list)
+        context['ti'].xcom_push(key='image_list', value=json.dumps(image_list))
 
     def create_emebeddings(**context):
         docs_folder = context["params"]["docs_folder"]
@@ -63,8 +64,11 @@ with DAG(
         collection_name = context["params"]["collection_name"] 
         print(f"Indexing PDF from {docs_folder}")
         
+        xcom_image_list = context['ti'].xcom_pull(key='image_list')
+        image_list = json.loads(xcom_image_list)
+        
         if(docs_folder):
-            image_embedder = ImageEmbedder(doc_path=docs_folder,
+            image_embedder = ImageEmbedder(image_list=image_list,
                                            chromadb_host=chromadb_host,
                                            collection_name=collection_name, 
                                            embeddings=CLIPEmbeddings(model_name=CONST.IMAGE_MODEL_NAME))
@@ -91,4 +95,7 @@ with DAG(
         dag=dag,
     )
 
-    t1 >> [t2] >> [t3]
+    # t1.set_downstream(t2)
+    # t2.set_downstream(t3)
+    
+    t1 >> t2 >> t3

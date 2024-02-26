@@ -28,8 +28,10 @@ class PDFToImageConverter:
             pil_image = bitmap.to_pil()
             image_path = f"{img_dump_path}/img_{page_number + 1}.jpg"
             pil_image.save(image_path, format="JPEG")
-            images.append(images)
+            images.append(image_path)
             logging.info(f"Saving Image {image_path}")
+            
+        return images
     
     def convert(self):
         # Load PDF

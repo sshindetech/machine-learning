@@ -25,45 +25,14 @@ class ImageEmbedder(DocumentEmbeddingsClient):
     def __init__(
         self, 
         embeddings,
-        doc_path = CONST.DOCUMENT_SOURCE,
+        image_list,
         chromadb_host = CONST.CHROM_DB_HOST, 
         collection_name = CONST.CHROME_IMAGE_COLLECTION):
         super().__init__(chromadb_host, collection_name, embeddings)
-        self.doc_path = doc_path 
-            
-    def __get_images_from_pdf(self, pdf_path, img_dump_path):
-        """
-        Extract images from each page of a PDF document and save as JPEG files.
-
-        :param pdf_path: A string representing the path to the PDF file.
-        :param img_dump_path: A string representing the path to dummp images.
-        """
-        pdf = pdfium.PdfDocument(pdf_path)
-        n_pages = len(pdf)
-        for page_number in range(n_pages):
-            page = pdf.get_page(page_number)
-            bitmap = page.render(scale=1, rotation=0, crop=(0, 0, 0, 0))
-            pil_image = bitmap.to_pil()
-            pil_image.save(f"{img_dump_path}/img_{page_number + 1}.jpg", format="JPEG")
+        self.image_list = image_list 
     
     def embedded(self):
-        # Load PDF
-        pdf_doc_path = os.path.join(self.doc_path, 'sample_deck.pdf')               
-        rel_img_dump_path = os.path.join(self.doc_path, 'images')
-        
-        pil_images = self.__get_images_from_pdf(pdf_doc_path, rel_img_dump_path)
-
-        # Get image URIs
-        image_uris = sorted(
-            [
-                os.path.join(rel_img_dump_path, image_name)
-                for image_name in os.listdir(rel_img_dump_path)
-                if image_name.endswith(".jpg")
-            ]
-        )
-
-        # Embedded and add images to Vector Store
-        logging.info("Embedding images from location: " + rel_img_dump_path)
+        image_uris = self.image_list
         
         textEmbeddingClient = DocumentEmbeddingsClient(
             chromadb_host=self.chromadb_host, 
@@ -71,6 +40,8 @@ class ImageEmbedder(DocumentEmbeddingsClient):
             embeddings=HuggingFaceEmbeddings(model_name=CONST.TEXT_MODEL_NAME))
         
         for image_path in image_uris:
+            # Embedded and add images to Vector Store
+            logging.info("Embedding images from location: " + image_path)            
             # Save embedding in IMAGE collection for text search
             documents = [ 
                 Document(page_content=image_path, metadata={ "photo_image_url": image_path})
