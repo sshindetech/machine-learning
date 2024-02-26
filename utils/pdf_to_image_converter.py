@@ -22,7 +22,9 @@ class PDFToImageConverter:
         
         images = []
         n_pages = len(pdf)
+        
         for page_number in range(n_pages):
+            logging.info(f'processing page: {page_number}')
             page = pdf.get_page(page_number)
             bitmap = page.render(scale=1, rotation=0, crop=(0, 0, 0, 0))
             pil_image = bitmap.to_pil()
@@ -35,7 +37,10 @@ class PDFToImageConverter:
     
     def convert(self):
         # Load PDF
-        pdf_doc_path = os.path.join(self.doc_path, 'sample_deck.pdf')               
+        
+        pdf_doc_path = os.path.join(self.doc_path, 'sample_deck.pdf')  
+        logging.info(f'loading document from {pdf_doc_path}')
+                     
         rel_img_dump_path = os.path.join(self.doc_path, 'images')
         
         image_uris = self.__get_images_from_pdf(pdf_doc_path, rel_img_dump_path)

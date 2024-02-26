@@ -10,4 +10,4 @@ SITEMAP_MAX_URL_TO_PROCESS = 10
 TEXT_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 IMAGE_MODEL_NAME = "openai/clip-vit-base-patch32" # "Xenova/clip-vit-base-patch32"
 
-DOCUMENT_SOURCE = "~/machine-learning/docker/docker_volumes/docs"
+DOCUMENT_SOURCE = "/home/allquill/machine-learning/docker/docker_volumes/docs"
