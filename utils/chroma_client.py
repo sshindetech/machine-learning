@@ -30,7 +30,8 @@ class DocumentEmbeddingsClient(ChromDBClient):
         logging.info(f"DocumentEmbeddings initialized: {self.chromadb_host}")
                   
     def save_documents_and_return_vectorstore(self, documents):
-        logging.info("START: save_documents_and_return_vectorstore")
+        logging.info(f"START: save_documents_and_return_vectorstore to {self.collection_name}")
+        
         vectorStore = Chroma.from_documents(
             documents, 
             self.embeddings , 
@@ -40,7 +41,8 @@ class DocumentEmbeddingsClient(ChromDBClient):
                 "hnsw:space": "cosine",
             }
         )
-        logging.info("END: save_documents_and_return_vectorstore")
+        
+        logging.info(f"END: save_documents_and_return_vectorstore to {self.collection_name}")
         
         return vectorStore
 
