@@ -66,7 +66,6 @@ with DAG(
             image_embedder = ImageEmbedder(doc_path=docs_folder,
                                            chromadb_host=chromadb_host,
                                            collection_name=collection_name, 
-                                           image_collection_name=image_collection_name,
                                            embeddings=CLIPEmbeddings(model_name=CONST.IMAGE_MODEL_NAME))
             image_embedder.embedded()
     
