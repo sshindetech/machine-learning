@@ -10,6 +10,8 @@ from airflow.operators.python import PythonOperator
 
 from machine_learning.utils.image_embedder import ImageEmbedder
 from machine_learning.utils.clip_embeddings import CLIPEmbeddings
+from machine_learning.utils.pdf_to_image_converter import PDFToImageConverter
+
 import machine_learning.utils.constants as CONST;
 
 with DAG(
@@ -47,12 +49,13 @@ with DAG(
      }    
 ) as dag:
 
-    # t1, and t2 are examples of tasks created by instantiating operators
-    t1 = BashOperator(
-        task_id="print_date",
-        bash_command="date",
-        dag=dag,
-    )
+    def convert_pdf_to_images(**context):
+        docs_folder = context["params"]["docs_folder"]
+        
+        converter = PDFToImageConverter(doc_path=docs_folder)
+        image_list = converter.convert()
+        
+        context['ti'].xcom_push(key='image_list', value=image_list)
 
     def create_emebeddings(**context):
         docs_folder = context["params"]["docs_folder"]
@@ -67,11 +70,25 @@ with DAG(
                                            embeddings=CLIPEmbeddings(model_name=CONST.IMAGE_MODEL_NAME))
             image_embedder.embedded()
     
+    # t1, and t2 are examples of tasks created by instantiating operators
+    t1 = BashOperator(
+        task_id="print_date",
+        bash_command="date",
+        dag=dag,
+    )
+        
     # Task: Scrape URLs and write to a file
     t2 = PythonOperator(
-        task_id='parse_and_save_image_embedings',
+        task_id='convert_pdf_to_images',
+        python_callable=convert_pdf_to_images,
+        dag=dag,
+    )
+    
+    # Task: Scrape URLs and write to a file
+    t3 = PythonOperator(
+        task_id='create_emebeddings',
         python_callable=create_emebeddings,
         dag=dag,
     )
 
-    t1 >> [t2]
+    t1 >> [t2] >> [t3]
