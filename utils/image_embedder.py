@@ -1,24 +1,10 @@
 import logging
 
 from langchain_core.documents import Document
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain.document_loaders.web_base import (WebBaseLoader,)
 from langchain_community.embeddings import HuggingFaceEmbeddings
-
-import os
-
-import pypdfium2 as pdfium
-from langchain_community.vectorstores import Chroma
-from langchain_experimental.open_clip import OpenCLIPEmbeddings
-
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 
-from pathlib import Path
-
 from machine_learning.utils.chroma_client import DocumentEmbeddingsClient
-
 import machine_learning.utils.constants as CONST;
 
 class ImageEmbedder(DocumentEmbeddingsClient):
