@@ -3,34 +3,26 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 
-from langchain_core.documents import Document
-
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
 from langchain.document_loaders.web_base import (WebBaseLoader,)
-from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from langchain_community.vectorstores import Chroma
-from langchain_experimental.open_clip import OpenCLIPEmbeddings
-
-from langchain_community.document_loaders.image import UnstructuredImageLoader
-
-from dags.machine_learning.utils.chroma_client import DocumentEmbeddingsClient
+from machine_learning.utils.chroma_client import DocumentEmbeddingsClient
 import machine_learning.utils.constants as CONST;
 
 class SitemapEmbedder(DocumentEmbeddingsClient):
-                
+                        
     def __init__(
-        self, sitemap_url = CONST.SITEMAP_DEFAULT, 
+        self, 
+        embeddings,
+        sitemap_url = CONST.SITEMAP_DEFAULT, 
         max_url_to_process = CONST.SITEMAP_MAX_URL_TO_PROCESS,
         chromadb_host = CONST.CHROM_DB_HOST, 
-        collection_name = CONST.CHROM_TEXT_COLLECTION,
-        embeddings = HuggingFaceEmbeddings(model_name=CONST.TEXT_MODEL_NAME)):
+        collection_name = CONST.CHROM_TEXT_COLLECTION):
         
         super().__init__(chromadb_host, collection_name, embeddings)
         self.sitemap_url = sitemap_url
         self.max_url_to_process = max_url_to_process
-        logging.info(f"WebScraperEmbedder initialized: {self.sitemap_url}")
+        logging.info(f"SitemapEmbedder initialized: {self.sitemap_url}")
       
     def parse_html_using_webloader(self, url):
         loader = WebBaseLoader(url)
@@ -41,6 +33,7 @@ class SitemapEmbedder(DocumentEmbeddingsClient):
             chunk_size = 500,
         )
         
+        logging.info(f"Document Loaded from: {url}")
         return text_splitter.split_documents(docs)
   
     def __parse_sitemap_and_return_urls(self):
@@ -61,7 +54,6 @@ class SitemapEmbedder(DocumentEmbeddingsClient):
             return page_urls
         else:
             logging.info(f"Failed to fetch sitemap from {self.sitemap_url}")
-            print(f"Failed to fetch sitemap from {self.sitemap_url}")  
 
     def parse_and_save_sitemap_embedings(self):                
         urls = self.__parse_sitemap_and_return_urls()
@@ -72,6 +64,7 @@ class SitemapEmbedder(DocumentEmbeddingsClient):
                 count = count + 1
                 logging.info(f"Processing URL: {u}")
                 documents = self.parse_html_using_webloader(u)
+                logging.info(f"Saving Document to Vector Store")
                 self.save_documents_and_return_vectorstore(documents)
             else:
                 break

@@ -10,10 +10,13 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from dags.machine_learning.utils.sitemap_embedder import SitemapEmbedder
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+from machine_learning.utils.sitemap_embedder import SitemapEmbedder
+import machine_learning.utils.constants as CONST;
 
 with DAG(
-    "ml_web_scraper_dag",
+    "ml_sitemap_embedder_dag",
     # These args will get passed on to each operator
     # You can override them on a per-task basis during operator initialization
     default_args={
@@ -41,10 +44,10 @@ with DAG(
     catchup=False,
     tags=["machine_learning"],
     params={
-         "sitemap_url": Param("https://www.netcentric.biz/sitemap.xml", type=["null", "string"]),
-         "max_url_to_process": Param(10, type=["null", "integer"]),
-         "chromadb_host_url": Param('10.0.1.104', type=["null", "string"]),
-         "chromadb_collection_name": Param('a-test-collection', type=["null", "string"])
+         "sitemap_url": Param(CONST.SITEMAP_DEFAULT, type=["null", "string"]),
+         "max_url_to_process": Param(CONST.SITEMAP_MAX_URL_TO_PROCESS, type=["null", "integer"]),
+         "chromadb_host_url": Param(CONST.CHROM_DB_HOST, type=["null", "string"]),
+         "chromadb_collection_name": Param(CONST.CHROM_TEXT_COLLECTION, type=["null", "string"])
      }    
 ) as dag:
 
@@ -56,10 +59,18 @@ with DAG(
     )
 
     def create_emebeddings(**context):
+        chromadb_host_url = context["params"]["chromadb_host_url"]
         sitemap_url = context["params"]["sitemap_url"]
+        chromadb_collection_name = context["params"]["chromadb_collection_name"]
         max_url_to_process = context["params"]["max_url_to_process"]
         print(f"Sitemap URL from DAG {sitemap_url}")
-        scrapper = SitemapEmbedder(sitemap_url=sitemap_url, max_url_to_process=max_url_to_process)
+        scrapper = SitemapEmbedder(
+            chromadb_host=chromadb_host_url,
+            collection_name=chromadb_collection_name,
+            sitemap_url=sitemap_url,
+            max_url_to_process=max_url_to_process,
+            embeddings=HuggingFaceEmbeddings(model_name=CONST.TEXT_MODEL_NAME)
+        )
         return scrapper.parse_and_save_sitemap_embedings()
     
     # Task: Scrape URLs and write to a file

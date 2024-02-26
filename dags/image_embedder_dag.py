@@ -1,6 +1,5 @@
-
-import textwrap
 from datetime import datetime, timedelta
+from pathlib import Path
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow.models.dag import DAG
@@ -10,10 +9,9 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from dags.machine_learning.utils.sitemap_embedder import ImageEmbedder
-
-import os
-from pathlib import Path
+from machine_learning.utils.image_embedder import ImageEmbedder
+from machine_learning.utils.clip_embeddings import CLIPEmbeddings
+import machine_learning.utils.constants as CONST;
 
 with DAG(
     "ml_image_embedder_dag",
@@ -67,7 +65,10 @@ with DAG(
         
         if(docs_folder):
             image_embedder = ImageEmbedder(doc_path=docs_folder,
-                                           chromadb_host=chromadb_host,collection_name=collection_name, image_collection_name=image_collection_name)
+                                           chromadb_host=chromadb_host,
+                                           collection_name=collection_name, 
+                                           image_collection_name=image_collection_name,
+                                           embeddings=CLIPEmbeddings(model_name=CONST.IMAGE_MODEL_NAME))
             image_embedder.embedded()
     
     # Task: Scrape URLs and write to a file

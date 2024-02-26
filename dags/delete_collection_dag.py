@@ -10,7 +10,7 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from dags.machine_learning.utils.chroma_client import ChromDBClient
+from machine_learning.utils.chroma_client import ChromDBClient
 
 import logging
 

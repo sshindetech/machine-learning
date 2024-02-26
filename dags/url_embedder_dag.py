@@ -10,7 +10,10 @@ from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from dags.machine_learning.utils.sitemap_embedder import SitemapEmbedder
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+from machine_learning.utils.sitemap_embedder import SitemapEmbedder
+import machine_learning.utils.constants as CONST;
 
 with DAG(
     "ml_url_embedder_dag",
@@ -61,7 +64,11 @@ with DAG(
         print(f"Indexing URLs {url_list}")
         
         if(url_list):
-            scrapper = SitemapEmbedder(chromadb_host=chromadb_host,collection_name=collection_name)
+            scrapper = SitemapEmbedder(
+                chromadb_host=chromadb_host,
+                collection_name=collection_name,
+                embeddings=HuggingFaceEmbeddings(model_name=CONST.TEXT_MODEL_NAME)
+            )
             urls = url_list.split(",")
             for url in urls:
                 print(f"Creating Embeddings for URLs {url}")

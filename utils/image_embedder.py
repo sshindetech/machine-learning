@@ -15,17 +15,18 @@ from langchain_experimental.open_clip import OpenCLIPEmbeddings
 
 from langchain_community.document_loaders.image import UnstructuredImageLoader
 
-from machine_learning.utils.clip_embeddings import CLIPEmbeddings
-from dags.machine_learning.utils.chroma_client import DocumentEmbeddingsClient
+
+from machine_learning.utils.chroma_client import DocumentEmbeddingsClient
 
 import machine_learning.utils.constants as CONST;
 
 class ImageEmbedder(DocumentEmbeddingsClient):
     def __init__(
-        self, doc_path = CONST.DOCUMENT_SOURCE,
+        self, 
+        embeddings,
+        doc_path = CONST.DOCUMENT_SOURCE,
         chromadb_host = CONST.CHROM_DB_HOST, 
-        collection_name = CONST.CHROME_IMAGE_COLLECTION,
-        embeddings = CLIPEmbeddings(model_name=CONST.IMAGE_MODEL_NAME)):
+        collection_name = CONST.CHROME_IMAGE_COLLECTION):
         super().__init__(chromadb_host, collection_name, embeddings)
         self.doc_path = doc_path 
             
